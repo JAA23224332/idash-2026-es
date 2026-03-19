@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Conversar con tus Datos — IDASH 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2942;--teal:#0d7377;--teal2:#14a085;--green:#16a34a;--green-l:#dcfce7;
+  --amber:#d97706;--amber-l:#fef3c7;--red:#dc2626;--red-l:#fee2e2;
+  --blue:#2563eb;--blue-l:#dbeafe;--purple:#7c3aed;--purple-l:#ede9fe;
+  --slate:#334155;--muted:#64748b;--off:#f8fafc;--border:#e2e8f0;--white:#ffffff;
+  --code-bg:#0d1b2a;--code-text:#7dd3fc;
+  --font-head:'Syne',sans-serif;--font-body:'Nunito',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --radius:12px;--radius-sm:6px;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-md:0 4px 24px rgba(0,0,0,.12);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--off);color:var(--slate);line-height:1.6;font-size:15px}
+.sidebar{position:fixed;left:0;top:0;width:245px;height:100vh;background:var(--navy);overflow-y:auto;z-index:100;display:flex;flex-direction:column;padding:0 0 24px}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo .badge{display:inline-block;background:var(--teal);color:var(--white);font-size:9px;font-family:var(--font-mono);letter-spacing:.08em;padding:2px 8px;border-radius:20px;margin-bottom:6px;text-transform:uppercase}
+.sidebar-logo h1{font-family:var(--font-head);font-size:14px;color:var(--white);line-height:1.3}
+.sidebar-logo h1 span{color:var(--teal2)}
+.nav-section{padding:16px 14px 4px;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.3);font-family:var(--font-mono)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;color:rgba(255,255,255,.55);text-decoration:none;font-size:12.5px;font-weight:500;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.nav-item:hover{color:var(--white);background:rgba(255,255,255,.06)}
+.nav-item.active{color:var(--white);border-left-color:var(--teal2);background:rgba(13,115,119,.18)}
+.nav-item .nav-num{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);flex-shrink:0;transition:background .2s}
+.nav-item.active .nav-num{background:var(--teal2);color:var(--white)}
+.nav-item.sub{padding-left:34px;font-size:11.5px;color:rgba(255,255,255,.4)}
+.nav-item.sub::before{content:'↳';margin-right:4px;color:rgba(255,255,255,.2)}
+.nav-item.sub:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
+.nav-item.sub.active{color:var(--teal2);border-left-color:var(--teal2);background:rgba(13,115,119,.1)}
+.progress-bar{margin:16px 18px 0;background:rgba(255,255,255,.08);border-radius:4px;height:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--teal2);border-radius:4px;transition:width .4s ease;width:0%}
+.main{margin-left:245px;min-height:100vh}
+.hero{background:var(--navy);padding:56px 56px 48px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-80px;top:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(13,115,119,.3) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;right:140px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(20,160,133,.15) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(13,115,119,.3);border:1px solid rgba(13,115,119,.5);color:var(--teal2);font-size:11px;font-family:var(--font-mono);padding:4px 12px;border-radius:20px;margin-bottom:20px;letter-spacing:.05em}
+.hero h2{font-family:var(--font-head);font-size:clamp(26px,3.5vw,42px);color:var(--white);line-height:1.15;margin-bottom:14px}
+.hero h2 em{color:var(--teal2);font-style:normal}
+.hero-sub{color:rgba(255,255,255,.5);font-size:14px;max-width:540px;margin-bottom:16px}
+.hero-intro{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:18px 22px;max-width:680px;margin-bottom:28px}
+.hero-intro p{color:rgba(255,255,255,.65);font-size:13.5px;line-height:1.65}
+.hero-intro p+p{margin-top:8px}
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap}
+.stat-pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 16px;display:flex;flex-direction:column;align-items:center}
+.stat-pill strong{font-family:var(--font-head);font-size:20px;color:var(--teal2);line-height:1}
+.stat-pill span{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.prereq-banner{background:linear-gradient(135deg,#1a3d2e,#122d1e);border-left:4px solid var(--green);padding:16px 20px;margin:0 56px 0;border-radius:0 var(--radius) var(--radius) 0}
+.prereq-banner strong{color:var(--green);font-size:13px}
+.prereq-banner p{color:rgba(255,255,255,.6);font-size:12.5px;margin-top:4px}
+.content{padding:40px 56px 80px}
+.step-section{margin-bottom:60px;scroll-margin-top:24px}
+.section-overview{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;margin-bottom:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.section-overview::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.section-overview.blue::before{background:var(--blue)}.section-overview.teal::before{background:var(--teal)}
+.section-overview.purple::before{background:var(--purple)}.section-overview.amber::before{background:var(--amber)}
+.section-overview.red::before{background:var(--red)}.section-overview.navy::before{background:var(--navy)}
+.section-overview.green::before{background:var(--green)}
+.section-overview h4{font-family:var(--font-head);font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-overview.blue h4{color:var(--blue)}.section-overview.teal h4{color:var(--teal)}
+.section-overview.purple h4{color:var(--purple)}.section-overview.amber h4{color:var(--amber)}
+.section-overview.red h4{color:var(--red)}.section-overview.navy h4{color:var(--navy)}
+.section-overview.green h4{color:var(--green)}
+.section-overview p{font-size:13.5px;color:var(--slate);line-height:1.65;margin-bottom:8px}
+.section-overview p:last-child{margin-bottom:0}
+.section-overview .ov-goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.section-overview .ov-goal{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--off);border:1px solid var(--border);color:var(--slate)}
+.step-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
+.step-badge{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--white);flex-shrink:0}
+.step-header-text h3{font-family:var(--font-head);font-size:20px;color:var(--navy);line-height:1.2}
+.step-header-text p{color:var(--muted);font-size:13px;margin-top:3px}
+.step-tag{display:inline-block;font-size:10px;font-family:var(--font-mono);padding:2px 8px;border-radius:20px;margin-left:8px;text-transform:uppercase;letter-spacing:.06em;vertical-align:middle}
+.explain{background:var(--blue-l);border:1px solid #bfdbfe;border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;gap:12px}
+.explain .icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.explain-text strong{color:var(--blue);font-size:13px;display:block;margin-bottom:3px}
+.explain-text p{font-size:13px;color:var(--slate);line-height:1.5}
+.explain.green{background:var(--green-l);border-color:#bbf7d0}.explain.green .explain-text strong{color:var(--green)}
+.explain.amber{background:var(--amber-l);border-color:#fde68a}.explain.amber .explain-text strong{color:var(--amber)}
+.explain.red{background:var(--red-l);border-color:#fca5a5}.explain.red .explain-text strong{color:var(--red)}
+.instructions{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.instruction{display:flex;align-items:flex-start;gap:12px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;box-shadow:var(--shadow)}
+.instruction .inst-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--font-mono);font-weight:600;flex-shrink:0;color:var(--white);margin-top:1px}
+.instruction p{font-size:13.5px;color:var(--slate)}
+.instruction p strong{color:var(--navy)}
+.instruction p code{background:rgba(13,115,119,.1);color:var(--teal);font-family:var(--font-mono);font-size:12px;padding:1px 5px;border-radius:3px}
+.instruction a{color:var(--teal);text-decoration:none;font-weight:600}
+.code-block-wrapper,.sql-block-wrapper{margin-bottom:20px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md)}
+.code-header,.sql-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.code-header{background:#1a2d3d}.sql-header{background:#1a2d1a}
+.code-header-left,.sql-header-left{display:flex;align-items:center;gap:10px}
+.code-dots,.sql-dots{display:flex;gap:5px}
+.code-dots span,.sql-dots span{width:10px;height:10px;border-radius:50%}
+.code-dots span:nth-child(1),.sql-dots span:nth-child(1){background:#ff5f57}
+.code-dots span:nth-child(2),.sql-dots span:nth-child(2){background:#febc2e}
+.code-dots span:nth-child(3),.sql-dots span:nth-child(3){background:#28c840}
+.code-label,.sql-label{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.04em}
+pre.code-body{background:var(--code-bg);padding:20px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--code-text);margin:0}
+pre.sql-body{background:#0d1f0d;padding:20px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:#86efac;margin:0}
+.copy-btn{display:flex;align-items:center;gap:6px;background:rgba(13,115,119,.25);border:1px solid rgba(13,115,119,.4);color:var(--teal2);font-family:var(--font-mono);font-size:11px;padding:5px 12px;border-radius:5px;cursor:pointer;transition:all .2s;letter-spacing:.04em}
+.copy-btn:hover{background:rgba(13,115,119,.4)}
+.copy-btn.copied{background:rgba(22,163,74,.25);border-color:rgba(22,163,74,.4);color:#4ade80}
+.copy-btn svg{width:12px;height:12px}
+.result-preview{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.result-preview-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.result-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:4px}
+.result-row.ok{background:var(--green-l);color:var(--green)}.result-row.warn{background:var(--amber-l);color:var(--amber)}.result-row.info{background:var(--blue-l);color:var(--blue)}
+.tip-card{background:linear-gradient(135deg,#0f2942,#1a3d5c);border-radius:var(--radius);padding:20px 24px;display:flex;gap:14px;margin-bottom:20px}
+.tip-card .tip-icon{font-size:22px;flex-shrink:0}
+.tip-card .tip-title{color:var(--teal2);font-weight:700;font-size:13px;margin-bottom:4px}
+.tip-card .tip-text{color:rgba(255,255,255,.6);font-size:13px;line-height:1.5}
+.alert{border-radius:var(--radius);padding:14px 18px;display:flex;gap:12px;margin-bottom:16px;align-items:flex-start}
+.alert .alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert p{font-size:13px;line-height:1.5}
+.alert.danger{background:var(--red-l);border:1px solid #fca5a5;color:#7f1d1d}
+.alert.success{background:var(--green-l);border:1px solid #bbf7d0;color:#14532d}
+.alert.warning{background:var(--amber-l);border:1px solid #fde68a;color:#78350f}
+.compare-table{width:100%;border-collapse:collapse;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;font-size:13px}
+.compare-table thead tr{background:var(--navy)}
+.compare-table thead th{padding:12px 16px;text-align:left;color:var(--white);font-family:var(--font-head);font-size:12px;letter-spacing:.04em}
+.compare-table tbody tr:nth-child(even){background:rgba(13,115,119,.04)}
+.compare-table td{padding:10px 16px;border-bottom:1px solid var(--border)}
+.compare-table td:first-child{font-weight:600;color:var(--navy)}
+.badge-yes{background:var(--green-l);color:var(--green);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-no{background:var(--red-l);color:var(--red);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-mid{background:var(--amber-l);color:var(--amber);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.flow-item{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:80px}
+.flow-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.flow-label{font-size:11px;font-weight:700;color:var(--navy);text-align:center}
+.flow-sub{font-size:10px;color:var(--muted);text-align:center}
+.flow-arrow{font-size:18px;color:var(--muted);flex-shrink:0}
+.checklist{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.check-item{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;cursor:pointer;transition:all .2s;user-select:none}
+.check-item:hover{border-color:var(--teal);box-shadow:0 0 0 2px rgba(13,115,119,.1)}
+.check-item.checked{background:var(--green-l);border-color:#bbf7d0}
+.check-box{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:12px}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green);color:var(--white)}
+.check-item span{font-size:13px;color:var(--slate)}
+.check-item.checked span{color:var(--green);text-decoration:line-through;opacity:.7}
+.section-divider{height:1px;background:linear-gradient(to right,var(--border),transparent);margin:52px 0}
+.footer{background:var(--navy);padding:24px 56px;display:flex;align-items:center;justify-content:space-between;color:rgba(255,255,255,.4);font-size:12px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.step-section{animation:fadeUp .4s ease both}
+.step-section:nth-child(1){animation-delay:.05s}.step-section:nth-child(2){animation-delay:.10s}
+.step-section:nth-child(3){animation-delay:.15s}.step-section:nth-child(4){animation-delay:.20s}
+.step-section:nth-child(5){animation-delay:.25s}.step-section:nth-child(6){animation-delay:.30s}
+.step-section:nth-child(7){animation-delay:.35s}.step-section:nth-child(8){animation-delay:.40s}
+@media(max-width:900px){.sidebar{display:none}.main{margin-left:0}.hero,.content{padding:28px 20px}.prereq-banner{margin:0 20px}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="badge">IDASH 2026</div>
+    <h1>Cómo <span>Conversar</span><br>con tus Datos</h1>
+  </div>
+  <div class="nav-section">Etapas del Taller</div>
+  <a class="nav-item active" href="#step1" onclick="setActive(this)"><span class="nav-num">1</span> Preparar el Entorno</a>
+  <a class="nav-item" href="#step2" onclick="setActive(this)"><span class="nav-num">2</span> Cargar los Datos</a>
+  <a class="nav-item" href="#step3" onclick="setActive(this)"><span class="nav-num">3</span> Explorar los Datos</a>
+  <a class="nav-item sub" href="#step3b" onclick="setActive(this)">3B · Validar con SQL</a>
+  <a class="nav-item" href="#step4" onclick="setActive(this)"><span class="nav-num">4</span> Entender el RAG</a>
+  <a class="nav-item" href="#step5" onclick="setActive(this)"><span class="nav-num">5</span> Conectar la IA</a>
+  <a class="nav-item" href="#step6" onclick="setActive(this)"><span class="nav-num">6</span> Motor del Chat</a>
+  <a class="nav-item" href="#step7" onclick="setActive(this)"><span class="nav-num">7</span> Interfaz Gradio</a>
+  <a class="nav-item" href="#step8" onclick="setActive(this)"><span class="nav-num">8</span> Exportar Resultados</a>
+  <div class="nav-section" style="margin-top:12px">Tu Progreso</div>
+  <div style="padding:0 18px;">
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressBar"></div></div>
+    <p style="color:rgba(255,255,255,.3);font-size:11px;font-family:var(--font-mono);margin-top:6px;" id="progressText">0 / 8 etapas</p>
+  </div>
+</nav>
+<div class="main">
+  <div class="hero">
+    <div class="hero-tag">🏥 CNES · Camas Hospitalarias · Brasil Jun/2025</div>
+    <h2>Cómo <em>Conversar</em> con<br>tus Datos</h2>
+    <p class="hero-sub">Guía paso a paso para construir un chatbot que responde preguntas sobre datos reales del SUS — sin necesitar ser programador para usar el resultado.</p>
+    <div class="hero-intro">
+      <p>En este taller vamos a construir, desde cero, un asistente de inteligencia artificial capaz de responder preguntas en lenguaje natural sobre los datos del CNES de Brasil. El archivo que utilizaremos contiene información sobre camas hospitalarias registradas en junio de 2025.</p>
+      <p>No es necesario tener experiencia en programación para <strong>usar</strong> el resultado final. Seguiremos todos los pasos de construcción para entender cómo funciona por dentro — desde la carga del CSV hasta la interfaz visual del chatbot.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-pill"><strong>8</strong><span>etapas</span></div>
+      <div class="stat-pill"><strong>~90</strong><span>minutos</span></div>
+      <div class="stat-pill"><strong>GPT-4o-mini</strong><span>modelo usado</span></div>
+      <div class="stat-pill"><strong>Gratuito</strong><span>Google Colab</span></div>
+    </div>
+  </div>
+  <div class="prereq-banner">
+    <strong>✅ Lo que necesitas antes de comenzar</strong>
+    <p>Cuenta Google (para Colab) · Cuenta OpenAI con crédito (mínimo US$ 1) · El archivo CnesLeitosBR.csv · Aproximadamente 90 minutos</p>
+  </div>
+  <div class="content">
+
+    <!-- ── BLOCO 1 ── -->
+    <div class="step-section" id="step1">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">1</div>
+        <div class="step-header-text">
+          <h3>Preparar el Entorno <span class="step-tag" style="background:var(--blue-l);color:var(--blue);">⚙️ Configuração</span></h3>
+          <p>Instalar las 5 bibliotecas y configurar Python</p>
+        </div>
+      </div>
+      <div class="section-overview blue">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Antes de escribir una línea de análisis, Python necesita que instalemos las herramientas necesarias. Son 5 bibliotecas: <strong>pandas</strong> (tablas), <strong>numpy</strong> (cálculos), <strong>matplotlib</strong> y <strong>seaborn</strong> (gráficos), <strong>openai</strong> (IA) y <strong>gradio</strong> (interfaz).</p><p>La Celda 1 instala todo de una vez. La Celda 2 importa y configura el entorno para toda la sesión.</p>
+        <div class="ov-goals"><span class="ov-goal">📦 Instalar 5 bibliotecas</span><span class="ov-goal">⚙️ Configurar el entorno</span><span class="ov-goal">✅ Verificar instalación</span></div>
+      </div>
+      <div class="explain ">
+        <div class="icon">💡</div>
+        <div class="explain-text"><strong>O que são "bibliotecas"?</strong><p>Pense nelas como aplicativos extras que o Python precisa baixar antes de trabalhar com dados, gráficos e IA. Esse processo leva 1-2 minutos e só é feito uma vez por sessão do Colab.</p></div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--blue);">1</div><p>Abre <strong>Google Colab</strong> em <code>colab.research.google.com</code> e haz clic en <strong>Nuevo cuaderno</strong></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--blue);">2</div><p>Copia el código de la <strong>Celda 1</strong> abaixo, cole na primeira célula e presiona <code>Shift+Enter</code></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--blue);">3</div><p>Espera que termine la instalación y ejecuta la <strong>Celda 2</strong> para importar as bibliotecas</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 1 — Instalar bibliotecas</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body">%%capture
+# ============================================================
+# CÉLULA 1 — Instalar bibliotecas
+# ============================================================
+# pandas    → manipular tabelas de dados
+# numpy     → cálculos numéricos
+# matplotlib → criar gráficos
+# seaborn   → estilo visual dos gráficos
+# openai    → conectar ao GPT-4o-mini
+# gradio    → interface visual do chatbot
+# ============================================================
+!pip install openai gradio pandas numpy matplotlib seaborn
+
+print('✅ 5 bibliotecas instaladas: pandas, numpy, matplotlib, seaborn, openai, gradio')</pre>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔇</div>
+        <div><div class="tip-title">El <code>%%capture</code> en la primera línea es normal</div><div class="tip-text">Oculta la salida de la instalación. Si no aparece error rojo, todo está bien.</div></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 2 — Importar e configurar o ambiente</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 2 — Importar e configurar o ambiente
+# ============================================================
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+
+warnings.filterwarnings('ignore')
+pd.set_option('display.max_columns', 50)
+pd.set_option('display.float_format', '{:.2f}'.format)
+sns.set_theme(style='whitegrid', palette='husl')
+plt.rcParams['figure.figsize'] = (12, 5)
+plt.rcParams['figure.dpi'] = 100
+
+print('✅ Bibliotecas cargadas!')
+print(f'   pandas {pd.__version__} | numpy {np.__version__}')</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Salida esperada</div>
+        <div class="result-row ok">✅ 5 bibliotecas instaladas: pandas, numpy, matplotlib, seaborn, openai, gradio</div>
+        <div class="result-row ok">✅ Bibliotecas cargadas!</div>
+        <div class="result-row info">pandas 2.x.x | numpy 1.x.x</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La Celda 1 ejecutó sin error rojo</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La Celda 2 mostró "✅ Bibliotecas cargadas!"</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 2 ── -->
+    <div class="step-section" id="step2">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#0d7377,#0f766e);">2</div>
+        <div class="step-header-text">
+          <h3>Cargar los Datos <span class="step-tag" style="background:#f0fdfa;color:var(--teal);">📂 Upload CSV</span></h3>
+          <p>Subir el CSV y preparar la base para el análisis</p>
+        </div>
+      </div>
+      <div class="section-overview teal">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Vamos a cargar el archivo CSV del CNES dentro de Colab y prepararlo para el análisis. Dos etapas: (1) <strong>leer el archivo</strong> con la configuración correcta del estándar brasileño y (2) <strong>enriquecer los datos</strong> creando las columnas <code>uf_sg</code> y <code>regiao</code> a partir del <code>codufmun</code>.</p><p>El CSV del DATASUS usa punto y coma como separador, coma como decimal y encoding latin-1 para caracteres especiales. Si ignoramos esto, los datos quedan en una sola columna.</p>
+        <div class="ov-goals"><span class="ov-goal">📤 Subir el CSV</span><span class="ov-goal">🇧🇷 Padrão DATASUS</span><span class="ov-goal">🗺️ Derivar Estado y Región</span><span class="ov-goal">🔢 Validar columnas numéricas</span></div>
+      </div>
+      <div class="explain green">
+        <div class="icon">🇧🇷</div>
+        <div class="explain-text"><strong>¿Por qué este código parece diferente?</strong><p>Los archivos del DATASUS usan el estándar brasileño: <code>sep=";"</code>, <code>decimal=","</code> e <code>encoding="latin-1"</code>. Sem isso, o Python lê tudo em uma coluna só.</p></div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--teal);">1</div><p>Ejecuta la celda de abajo — aparecerá un botón <strong>"Escolher arquivo"</strong></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--teal);">2</div><p>Selecciona el archivo <strong>CnesLeitosBR.csv</strong> que você baixou</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--teal);">3</div><p>Espera que termine la carga y ve el resultado com número de linhas e colunas</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 3 — Upload e leitura do CSV</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 3 — Upload e leitura do CSV (padrão DATASUS/Brasil)
+# ============================================================
+# Padrão brasileiro:
+#   Separador : ;  (ponto e vírgula)
+#   Decimal   : ,  (vírgula)
+#   Encoding  : latin-1  (acentos: ç, ã, é)
+#   Data      : DD/MM/AAAA
+# Fontes: CNES, SINAN, SIM, IBGE, e-SUS
+# ============================================================
+from google.colab import files
+
+print('📤 Selecciona el archivo CnesLeitosBR.csv')
+uploaded = files.upload()
+nome_arquivo = list(uploaded.keys())[0]
+
+df = pd.read_csv(
+    nome_arquivo,
+    sep=';',             # separador: ponto e vírgula
+    encoding='latin-1',  # suporte a acentos brasileiros
+    decimal=',',         # decimal: vírgula (padrão BR)
+    thousands='.',       # milhar: ponto (1.234 = mil)
+    dayfirst=True,       # datas: DD/MM/AAAA
+    on_bad_lines='skip'  # pular linhas com problema
+)
+
+# Corrigir BOM e espaços nos nomes de colunas
+df.columns = [c.replace('ï»¿', '').strip() for c in df.columns]
+
+print(f'\n✅ Arquivo carregado: {nome_arquivo}')
+print(f'📐 {df.shape[0]:,} linhas × {df.shape[1]} colunas')
+print(f'📊 Colunas: {list(df.columns)}')
+df.head(3)</pre>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--teal);">1</div><p>Ejecuta la <strong>Celda 4</strong> — ela cria automaticamente as colunas <code>uf_sg</code> e <code>regiao</code></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--teal);">2</div><p>Verifica en el resultado si los 27 estados fueron mapeados corretamente</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 4 — Enriquecer os dados (derivar UF e Região)</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 4 — Enriquecer os dados (derivar UF e Região)
+# ============================================================
+# O CSV bruto tem apenas 'codufmun'. Criamos:
+#   uf_sg  → sigla do estado (ex: '35' → 'SP')
+#   regiao → Norte / Nordeste / CO / Sudeste / Sul
+# ============================================================
+
+df['uf_co'] = df['codufmun'].astype(str).str[:2]
+
+uf_map = {
+    '11':'RO','12':'AC','13':'AM','14':'RR','15':'PA','16':'AP','17':'TO',
+    '21':'MA','22':'PI','23':'CE','24':'RN','25':'PB','26':'PE','27':'AL','28':'SE','29':'BA',
+    '31':'MG','32':'ES','33':'RJ','35':'SP',
+    '41':'PR','42':'SC','43':'RS',
+    '50':'MS','51':'MT','52':'GO','53':'DF'
+}
+df['uf_sg'] = df['uf_co'].map(uf_map)
+
+reg_map = {
+    'Norte':        ['AM','PA','AC','RR','RO','AP','TO'],
+    'Nordeste':     ['MA','PI','CE','RN','PB','PE','AL','SE','BA'],
+    'Centro-Oeste': ['MT','MS','GO','DF'],
+    'Sudeste':      ['SP','RJ','MG','ES'],
+    'Sul':          ['PR','SC','RS']
+}
+uf_to_reg = {uf: r for r, ufs in reg_map.items() for uf in ufs}
+df['regiao'] = df['uf_sg'].map(uf_to_reg)
+
+# Garantir colunas numéricas
+for col in ['qt_exist', 'qt_sus', 'qt_nsus']:
+    if col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+
+# Calcular qt_nsus se não existir no CSV
+if 'qt_nsus' not in df.columns:
+    df['qt_nsus'] = df['qt_exist'] - df['qt_sus']
+
+print('✅ Base enriquecida!')
+print(f'🗺️  UFs: {df["uf_sg"].nunique()} | Regiões: {df["regiao"].nunique()}')
+print(f'🏥 Leitos totais : {df["qt_exist"].sum():,.0f}')
+print(f'💚 Leitos SUS    : {df["qt_sus"].sum():,.0f} ({df["qt_sus"].sum()/df["qt_exist"].sum()*100:.1f}%)')
+print(f'📋 Tipos de cama: {df["DS_TP_LEITO"].nunique() if "DS_TP_LEITO" in df.columns else "coluna não encontrada"}')</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Salida esperada</div>
+        <div class="result-row ok">✅ Archivo cargado: CnesLeitosBR.csv</div>
+        <div class="result-row info">📐 49.804 linhas × 11 colunas</div>
+        <div class="result-row ok">✅ Base enriquecida! | UFs: 27 | Regiões: 5</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>El archivo CSV se cargó correctamente</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Apareció el número de filas × columnas</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>El total de camas apareció correctamente</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 3 ── -->
+    <div class="step-section" id="step3">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">3</div>
+        <div class="step-header-text">
+          <h3>Explorar los Datos (EDA) <span class="step-tag" style="background:var(--purple-l);color:var(--purple);">📊 Visualização</span></h3>
+          <p>Ver quiénes son los datos antes de hacerle preguntas a la IA</p>
+        </div>
+      </div>
+      <div class="section-overview purple">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Antes de conectar cualquier IA, necesitamos entender con qué datos estamos trabajando. Esta etapa se llama EDA — Análisis Exploratorio de Datos.</p><p>La <strong>Celda 5</strong> genera un resumen numérico: total de camas, % SUS, UTIs, datos ausentes. La <strong>Celda 6</strong> crea 3 gráficos: camas por estado, % SUS por región y top 10 especialidades.</p>
+        <div class="ov-goals"><span class="ov-goal">📋 Resumen numérico</span><span class="ov-goal">📊 3 gráficos essenciais</span><span class="ov-goal">🔍 Detectar vacíos</span></div>
+      </div>
+      <div class="explain ">
+        <div class="icon">🔍</div>
+        <div class="explain-text"><strong>¿Por qué explorar antes de usar la IA?</strong><p>La IA solo responde bien cuando recibe contexto correcto. Si hay datos faltantes o erróneos, el chatbot inventará respuestas incorrectas con total confianza.</p></div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--purple);">1</div><p>Ejecuta la <strong>Celda 5</strong> para ver o resumo numérico completo</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--purple);">2</div><p>Ejecuta la <strong>Celda 6</strong> para gerar os 3 gráficos</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--purple);">3</div><p>Compara los valores con los que aparecerán en la validación SQL (Bloco 3B)</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 5 — Resumo geral dos dados</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 5 — Resumo geral dos dados
+# ============================================================
+lt_e = int(df['qt_exist'].sum())
+lt_s = int(df['qt_sus'].sum())
+lt_n = int(df['qt_nsus'].sum())
+df_uti = df[df['DS_CO_LEITO'].str.contains('UTI', na=False)] if 'DS_CO_LEITO' in df.columns else pd.DataFrame()
+uti_e  = int(df_uti['qt_exist'].sum()) if len(df_uti) &gt; 0 else 0
+uti_s  = int(df_uti['qt_sus'].sum())   if len(df_uti) &gt; 0 else 0
+
+print('=' * 55)
+print('RESUMO — CNES LEITOS HOSPITALARES BRASIL Jun/2025')
+print('=' * 55)
+print(f'  Registros na base    : {len(df):&gt;10,}')
+print(f'  Camas existentes    : {lt_e:&gt;10,}')
+print(f'  Leitos SUS           : {lt_s:&gt;10,}  ({lt_s/lt_e*100:.1f}%)')
+print(f'  Leitos não-SUS       : {lt_n:&gt;10,}  ({lt_n/lt_e*100:.1f}%)')
+print(f'  UTI existentes       : {uti_e:&gt;10,}')
+print(f'  UTI SUS              : {uti_s:&gt;10,}')
+print(f'  UFs                  : {df["uf_sg"].nunique():&gt;10}')
+print(f'  Tipos de cama       : {df["DS_TP_LEITO"].nunique():&gt;10}')
+print(f'  Especialidades       : {df["DS_CO_LEITO"].nunique():&gt;10}')
+
+# Missings
+miss = (df.isnull().sum()/len(df)*100).round(1)
+miss = miss[miss &gt; 0].sort_values(ascending=False)
+print(f'\n  Colunas com dados ausentes: {len(miss)}')
+if len(miss) &gt; 0:
+    for col, pct in miss.head(5).items():
+        print(f'    {col}: {pct}%')</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Salida esperada da Célula 5</div>
+        <div class="result-row ok">✅ RESUMO — CNES LEITOS HOSPITALARES BRASIL Jun/2025</div>
+        <div class="result-row info">Camas existentes: 535.133 | SUS: 66.4%</div>
+        <div class="result-row info">UTI existentes: ~50.000 | UTI SUS: ~65%</div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 6 — 3 gráficos essenciais</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 6 — 3 gráficos essenciais
+# ============================================================
+fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+fig.suptitle('CNES Leitos Hospitalares — Brasil Jun/2025', fontsize=14, fontweight='bold')
+
+# Gráfico 1: Leitos por UF
+uf_dist = df.groupby('uf_sg')['qt_exist'].sum().sort_values(ascending=False)
+cores = ['#e74c3c' if uf in uf_dist.head(5).index else '#3498db' for uf in uf_dist.index]
+axes[0].bar(uf_dist.index, uf_dist.values, color=cores, edgecolor='white')
+axes[0].set_title('Leitos por UF (🔴 Top 5)', fontweight='bold')
+axes[0].tick_params(axis='x', rotation=90, labelsize=7)
+
+# Gráfico 2: % SUS por Região
+reg_data = df.groupby('regiao').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum'))
+reg_data['pct_sus'] = (reg_data['sus']/reg_data['exist']*100).round(1)
+reg_data = reg_data.reindex([r for r in ['Norte','Nordeste','Centro-Oeste','Sudeste','Sul'] if r in reg_data.index])
+cores_r = ['#2ecc71' if v &gt;= 60 else '#f39c12' if v &gt;= 50 else '#e74c3c' for v in reg_data['pct_sus']]
+axes[1].bar(reg_data.index, reg_data['pct_sus'], color=cores_r, edgecolor='white')
+axes[1].axhline(lt_s/lt_e*100, color='black', linestyle='--', linewidth=1.5, label=f'Média BR ({lt_s/lt_e*100:.1f}%)')
+axes[1].set_title('% Leitos SUS por Região', fontweight='bold')
+axes[1].set_ylim(0, 100)
+axes[1].legend(fontsize=9)
+axes[1].tick_params(axis='x', rotation=15)
+
+# Gráfico 3: Top 10 Especialidades
+if 'DS_CO_LEITO' in df.columns:
+    top_esp = df.groupby('DS_CO_LEITO')['qt_exist'].sum().sort_values(ascending=False).head(10)
+    axes[2].barh(top_esp.index[::-1], top_esp.values[::-1], color='#9b59b6', edgecolor='white')
+    axes[2].set_title('Top 10 Especialidades', fontweight='bold')
+    axes[2].tick_params(axis='y', labelsize=8)
+
+plt.tight_layout()
+plt.show()</pre>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>El resumen numérico ejecutó y los totales aparecen correctos</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Los 3 gráficos se generaron sin error</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Identifiqué los estados con más camas en el gráfico</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 3B ── -->
+    <div class="step-section" id="step3b">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#16a34a,#15803d);font-size:14px;">3B</div>
+        <div class="step-header-text">
+          <h3>Validar con SQL Workbench <span class="step-tag" style="background:var(--green-l);color:var(--green);">🗄️ DuckDB · <a href="https://sql-workbench.com" target="_blank" style="color:var(--green);text-decoration:underline;">sql-workbench.com</a></span></h3>
+          <p>Confirmar con SQL los números que Python calculó — antes de alimentar a la IA</p>
+        </div>
+      </div>
+      <div class="section-overview green">
+        <h4>🗺️ ¿Por qué validar con SQL antes de usar la IA?</h4>
+        <p>Python calculó 535.133 camas y 66,4% SUS. Pero <strong>¿cómo sabes que calculó bien?</strong> La validación cruzada con SQL usa una herramienta completamente diferente para confirmar los mismos números.</p><p>Si los números coinciden: <strong>doble confirmación</strong>. Si no coinciden: encontraste un problema antes de que la IA responda con datos incorrectos.</p>
+        <div class="ov-goals"><span class="ov-goal">🌐 Abrir SQL Workbench</span><span class="ov-goal">📤 Subir el CSV</span><span class="ov-goal">🔢 3 consultas de validación</span><span class="ov-goal">✅ Confirmar que los números coinciden</span></div>
+      </div>
+      <div class="explain green">
+        <div class="icon">🗄️</div>
+        <div class="explain-text"><strong>¿Qué es SQL Workbench con DuckDB?</strong><p>Es un entorno SQL que corre completamente en el navegador — sin crear cuenta, sin instalar nada. Arrastras el CSV, crea la tabla automáticamente y escribes consultas SQL simples.</p></div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">1</div><p>Clique no link para abrir: <a href="https://sql-workbench.com" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:var(--teal);color:white;padding:4px 12px;border-radius:6px;font-weight:700;text-decoration:none;font-size:13px;">🌐 Abrir SQL Workbench ↗</a></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">2</div><p>En el área inferior izquierda, arrastra el archivo <strong>CnesLeitosBR.csv</strong> para o campo de drop</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">3</div><p>La tabla aparecerá como <code>CnesLeitosBR.csv</code> en el panel izquierdo en <strong>Tables</strong></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">4</div><p>Copia cada consulta de abajo, pégala en el editor y presiona <code>Ctrl+Enter</code></p></div>
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">📋</div>
+        <p><strong>Nombre de la tabla en esta clase: <code>CnesLeitosBR.csv</code></strong> — ya está correcto en todas las consultas de abajo.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔢</div>
+        <div><div class="tip-title">Consulta 1 — Totais gerais (a mais importante)</div><div class="tip-text">Verifica los tres números clave que Python calculó: total de camas, total SUS y porcentaje.</div></div>
+      </div>
+      <div class="sql-block-wrapper">
+        <div class="sql-header">
+          <div class="sql-header-left"><div class="sql-dots"><span></span><span></span><span></span></div><span class="sql-label">CONSULTA SQL 1 — Totais gerais — Resumo geral dos dados</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="sql-body">SELECT
+    COUNT(*)                                        AS total_registros,
+    SUM(qt_exist)                                   AS total_camas,
+    SUM(qt_sus)                                     AS total_sus,
+    SUM(qt_exist) - SUM(qt_sus)                    AS total_no_sus,
+    ROUND(SUM(qt_sus) * 100.0 / SUM(qt_exist), 1) AS pct_sus
+FROM "CnesLeitosBR.csv";</pre>
+      </div>
+<div style="background:#0d1f0d;border-top:1px solid rgba(255,255,255,.06);padding:10px 20px;"><p style="color:#4a7fa5;font-family:var(--font-mono);font-size:11px;line-height:1.6;">-- Resultado esperado: total_camas: 535.133 | pct_sus: 66.4%</p></div>
+      <div class="tip-card">
+        <div class="tip-icon">🗺️</div>
+        <div><div class="tip-title">Consulta 2 — Leitos por UF (Top 10)</div><div class="tip-text">Verifica si la distribución por estado coincide con el gráfico. <strong>Nota:</strong> <code>uf_sg</code> no existe en el CSV crudo — la derivamos de <code>codufmun</code> directamente en SQL.</div></div>
+      </div>
+      <div class="sql-block-wrapper">
+        <div class="sql-header">
+          <div class="sql-header-left"><div class="sql-dots"><span></span><span></span><span></span></div><span class="sql-label">CONSULTA SQL 2 — Leitos por UF (Top 10)</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="sql-body">SELECT
+    CASE LEFT(CAST(codufmun AS VARCHAR), 2)
+        WHEN '11' THEN 'RO' WHEN '12' THEN 'AC' WHEN '13' THEN 'AM'
+        WHEN '14' THEN 'RR' WHEN '15' THEN 'PA' WHEN '16' THEN 'AP'
+        WHEN '17' THEN 'TO' WHEN '21' THEN 'MA' WHEN '22' THEN 'PI'
+        WHEN '23' THEN 'CE' WHEN '24' THEN 'RN' WHEN '25' THEN 'PB'
+        WHEN '26' THEN 'PE' WHEN '27' THEN 'AL' WHEN '28' THEN 'SE'
+        WHEN '29' THEN 'BA' WHEN '31' THEN 'MG' WHEN '32' THEN 'ES'
+        WHEN '33' THEN 'RJ' WHEN '35' THEN 'SP' WHEN '41' THEN 'PR'
+        WHEN '42' THEN 'SC' WHEN '43' THEN 'RS' WHEN '50' THEN 'MS'
+        WHEN '51' THEN 'MT' WHEN '52' THEN 'GO' WHEN '53' THEN 'DF'
+    END                                             AS uf_sg,
+    SUM(qt_exist)                                   AS camas_existentes,
+    SUM(qt_sus)                                     AS camas_sus,
+    ROUND(SUM(qt_sus) * 100.0 / SUM(qt_exist), 1) AS pct_sus
+FROM "CnesLeitosBR.csv"
+GROUP BY LEFT(CAST(codufmun AS VARCHAR), 2)
+ORDER BY camas_existentes DESC
+LIMIT 10;</pre>
+      </div>
+<div style="background:#0d1f0d;border-top:1px solid rgba(255,255,255,.06);padding:10px 20px;"><p style="color:#4a7fa5;font-family:var(--font-mono);font-size:11px;line-height:1.6;">-- Compara con el gráfico de la Celda 6. El orden de los estados debe ser idéntico (SP → MG → RJ...).</p></div>
+      <div class="tip-card">
+        <div class="tip-icon">⚠️</div>
+        <div><div class="tip-title">Consulta 3 — Inconsistências lógicas (qt_sus > qt_exist)</div><div class="tip-text">Encuentra registros donde camas SUS > total existente — lógicamente imposible. Indica error en el registro.</div></div>
+      </div>
+      <div class="sql-block-wrapper">
+        <div class="sql-header">
+          <div class="sql-header-left"><div class="sql-dots"><span></span><span></span><span></span></div><span class="sql-label">CONSULTA SQL 3 — Inconsistências lógicas</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="sql-body">SELECT
+    COUNT(*)                   AS registros_inconsistentes,
+    SUM(qt_sus - qt_exist)     AS diferenca_total,
+    MAX(qt_sus - qt_exist)     AS maior_diferenca
+FROM "CnesLeitosBR.csv"
+WHERE qt_sus &gt; qt_exist;</pre>
+      </div>
+<div style="background:#0d1f0d;border-top:1px solid rgba(255,255,255,.06);padding:10px 20px;"><p style="color:#4a7fa5;font-family:var(--font-mono);font-size:11px;line-height:1.6;">-- Se registros_inconsistentes = 0 → ✅ base consistente<br>-- Se registros_inconsistentes &gt; 0 → ⚠️ há erros no cadastro CNES</p></div>
+      <div class="alert success">
+        <div class="alert-icon">✅</div>
+        <p><strong>Se os números batem:</strong> tienes doble confirmación independiente. La IA recibirá contexto confiable. Avanza al Bloque 4.</p>
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">⚠️</div>
+        <p><strong>Se os números divergem:</strong> verifica si el separador del CSV fue leído correctamente (<code>sep=";"</code> e <code>decimal=","</code>).</p>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Abrí el sql-workbench.com y subí el CSV</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La Consulta 1 ejecutó y el total de camas coincide con Python</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La Consulta 2 muestra el mismo orden de estados que el gráfico</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La Consulta 3 verificó las inconsistencias lógicas</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 4 ── -->
+    <div class="step-section" id="step4">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#d97706,#b45309);">4</div>
+        <div class="step-header-text">
+          <h3>Entender el RAG <span class="step-tag" style="background:var(--amber-l);color:var(--amber);">🧠 Conceito</span></h3>
+          <p>Cómo la IA va a "ver" os seus dados — sem precisar ler el CSV completo</p>
+        </div>
+      </div>
+      <div class="section-overview amber">
+        <h4>🗺️ ¿Qué es RAG?</h4>
+        <p>RAG — <em>Retrieval-Augmented Generation</em>. En lugar de enseñarle los datos a la IA, le <strong>mostramos</strong> un resumen relevante justo antes de cada pregunta. Como un estudiante que lleva fichas de resumen a un examen.</p>
+        <div class="ov-goals"><span class="ov-goal">🧠 Entender RAG</span><span class="ov-goal">⚖️ RAG vs Fine-tuning</span><span class="ov-goal">🗺️ Ver el flujo completo</span></div>
+      </div>
+      <div class="explain amber">
+        <div class="icon">🤔</div>
+        <div class="explain-text"><strong>RAG en lenguaje humano</strong><p>Imagina que vas a rendir un examen sobre el SUS y puedes llevar un cuaderno de resúmenes. RAG es exactamente eso: antes de responder cada pregunta, la IA consulta el "cuaderno de resúmenes" que preparamos con los datos del CNES.</p></div>
+      </div>
+      <div class="flow">
+        <div class="flow-item"><div class="flow-icon" style="background:#dbeafe;">📊</div><div class="flow-label">Tus datos</div><div class="flow-sub">CSV CNES</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item"><div class="flow-icon" style="background:#dcfce7;">🧮</div><div class="flow-label">Agregações</div><div class="flow-sub">por UF, tipo, UTI...</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item"><div class="flow-icon" style="background:#fef3c7;">🔀</div><div class="flow-label">Roteador</div><div class="flow-sub">selecciona relevante</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item"><div class="flow-icon" style="background:#ede9fe;">🤖</div><div class="flow-label">LLM + contexto</div><div class="flow-sub">GPT-4o-mini</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item"><div class="flow-icon" style="background:#f0fdfa;">💬</div><div class="flow-label">Resposta</div><div class="flow-sub">con números reales</div></div>
+      </div>
+      <table class="compare-table">
+        <thead><tr><th>Critério</th><th>RAG (nuestro enfoque)</th><th>Fine-tuning</th></tr></thead>
+        <tbody>
+          <tr><td>Se actualiza con nuevo CSV</td><td><span class="badge-yes">✅ Instantâneo</span></td><td><span class="badge-no">❌ Retreina tudo</span></td></tr>
+          <tr><td>Custo inicial</td><td><span class="badge-yes">✅ Baixo</span></td><td><span class="badge-no">❌ Alto (GPU)</span></td></tr>
+          <tr><td>Cita las fuentes</td><td><span class="badge-yes">✅ Transparente</span></td><td><span class="badge-no">❌ Opaco</span></td></tr>
+          <tr><td>Ideal para datos de salud</td><td><span class="badge-yes">✅ Recomendado</span></td><td><span class="badge-mid">🟡 Casos específicos</span></td></tr>
+        </tbody>
+      </table>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Entendí la diferencia entre RAG y Fine-tuning</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Comprendí el flujo: CSV → Agregações → Roteador → LLM → Resposta</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Sé por qué RAG es más adecuado para datos de salud pública</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 5 ── -->
+    <div class="step-section" id="step5">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#dc2626,#b91c1c);">5</div>
+        <div class="step-header-text">
+          <h3>Conectar la IA (API Key) <span class="step-tag" style="background:var(--red-l);color:var(--red);">🔑 Autenticação</span></h3>
+          <p>Configurar el acceso al GPT-4o-mini de OpenAI</p>
+        </div>
+      </div>
+      <div class="section-overview red">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Vamos a conectarnos al <strong>GPT-4o-mini de OpenAI</strong> usando una API Key — una clave de acceso personal. El código usa <code>getpass</code> que oculta la clave mientras la escribes.</p>
+        <div class="ov-goals"><span class="ov-goal">🔑 Obtener API Key</span><span class="ov-goal">🔒 Ingreso seguro</span><span class="ov-goal">✅ Probar la conexión</span></div>
+      </div>
+      <div class="alert danger">
+        <div class="alert-icon">🔐</div>
+        <p><strong>Segurança:</strong> Tu API Key es como la contraseña de tu tarjeta. Nunca la compartas en capturas, videos o cuadernos públicos. O código usa <code>getpass</code> que oculta lo que escribes.</p>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--red);">1</div><p>Accede a <code>platform.openai.com</code> → <strong>API Keys</strong> → <strong>Create new secret key</strong></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--red);">2</div><p>Copia la clave (empieza con <code>sk-...</code>) — ela só aparece uma vez</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--red);">3</div><p>Ejecuta la celda de abajo — pega la clave en el campo e pressione Enter</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 7 — Conectar à API OpenAI</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 7 — Conectar à API OpenAI
+# ============================================================
+import openai
+from getpass import getpass
+
+# getpass oculta lo que escribes (como campo de senha)
+OPENAI_API_KEY = getpass('🔑 Cole sua OpenAI API Key: ').strip()
+client_ai = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+# Teste rápido
+teste = client_ai.chat.completions.create(
+    model='gpt-4o-mini',
+    messages=[{'role':'user','content':'Responda apenas: CONECTADO'}],
+    max_tokens=10
+)
+print(f'\n✅ API OpenAI: {teste.choices[0].message.content}')
+print(f'   Modelo: gpt-4o-mini | Custo: ~$0.001 por pergunta')</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Salida esperada</div>
+        <div class="result-row ok">✅ API OpenAI: CONECTADO</div>
+        <div class="result-row info">Modelo: gpt-4o-mini | Custo: ~$0.001 por pergunta</div>
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">⚠️</div>
+        <p><strong>Erro "AuthenticationError"?</strong> La clave fue escrita mal o no tiene saldo. Acesse <code>platform.openai.com/usage</code> para verificar el saldo.</p>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>API Key ingresada sin error</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La prueba retornó "✅ API OpenAI: CONECTADO"</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 6 ── -->
+    <div class="step-section" id="step6">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#0f2942,#1a3d5c);">6</div>
+        <div class="step-header-text">
+          <h3>Motor del Chat <span class="step-tag" style="background:#f1f5f9;color:var(--slate);">⚙️ RAG na prática</span></h3>
+          <p>Construir las agregaciones, el enrutador y la función de chat</p>
+        </div>
+      </div>
+      <div class="section-overview navy">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Construimos 3 piezas: (1) <strong>Agregaciones pre-calculadas</strong> (Celda 8) — tablas-resumen calculadas una vez, el "índice" del RAG. (2) <strong>Enrutador de intención</strong> — lee la pregunta y selecciona qué tabelas enviar a la IA. (3) <strong>Función <code>chat_leitos()</code></strong> — une todo y llama a la API.</p>
+        <div class="ov-goals"><span class="ov-goal">🧮 Calcular 5 agregaciones</span><span class="ov-goal">🔀 Construir el enrutador</span><span class="ov-goal">💬 Função chat_leitos()</span><span class="ov-goal">🧪 Probar con una pregunta</span></div>
+      </div>
+      <div class="explain ">
+        <div class="icon">🏗️</div>
+        <div class="explain-text"><strong>¿Qué estamos construyendo?</strong><p>Son 3 piezas: (1) <strong>Agregaciones</strong> — tablas-resumen calculadas una vez. (2) <strong>Enrutador</strong> — lee la pregunta y decide qué tablas enviar a la IA. (3) <strong>Función de chat</strong> — une todo y llama a la API.</p></div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--navy);">1</div><p>Ejecuta la <strong>Celda 8</strong> — ela calcula as 5 tabelas-resumo de uma vez</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--navy);">2</div><p>Verifica en el resultado si aparecen los totales de tipos, UFs, regiões e especialidades</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 8 — Calcular agregações (o "índice" do RAG)</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 8 — Calcular agregações (o "índice" do RAG)
+# Estratégia: calcular uma vez, reutilizar em cada pergunta.
+# ============================================================
+print('⚙️ Calculando agregações...')
+
+_uf = df.groupby('uf_sg').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum')).sort_values('exist', ascending=False)
+_uf['taxa_sus'] = (_uf['sus'] / _uf['exist'] * 100).round(1)
+
+_tipo = df.groupby('DS_TP_LEITO').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum')).sort_values('exist', ascending=False)
+_tipo['taxa_sus'] = (_tipo['sus'] / _tipo['exist'] * 100).round(1)
+
+_df_uti   = df[df['DS_CO_LEITO'].str.contains('UTI', na=False)]
+_uti_tipo = _df_uti.groupby('DS_CO_LEITO').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum')).sort_values('exist', ascending=False)
+_uti_tipo['taxa_sus'] = (_uti_tipo['sus'] / _uti_tipo['exist'] * 100).round(1)
+_uti_uf   = _df_uti.groupby('uf_sg').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum')).sort_values('exist', ascending=False)
+_uti_uf['taxa_sus'] = (_uti_uf['sus'] / _uti_uf['exist'] * 100).round(1)
+
+_reg = df.groupby('regiao').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum'))
+_reg['taxa_sus'] = (_reg['sus'] / _reg['exist'] * 100).round(1)
+
+_esp = df.groupby('DS_CO_LEITO').agg(exist=('qt_exist','sum'), sus=('qt_sus','sum')).sort_values('exist', ascending=False).head(50)
+_esp['taxa_sus'] = (_esp['sus'] / _esp['exist'] * 100).round(1)
+
+_lt_e  = int(df['qt_exist'].sum())
+_lt_s  = int(df['qt_sus'].sum())
+_lt_n  = _lt_e - _lt_s
+_uti_e = int(_df_uti['qt_exist'].sum())
+_uti_s = int(_df_uti['qt_sus'].sum())
+
+_RESUMO = f"""DATASET: CNES Leitos Hospitalares Brasil, Junho 2025
+TOTAL: {len(df):,} registros | {_lt_e:,} leitos | {_lt_s:,} SUS ({_lt_s/_lt_e*100:.1f}%) | {_lt_n:,} não-SUS
+UTI: {_uti_e:,} existentes | {_uti_s:,} SUS ({_uti_s/_uti_e*100:.1f}%)
+UFs: {df['uf_sg'].nunique()} | TIPOS: {df['DS_TP_LEITO'].nunique()} | ESPECIALIDADES: {df['DS_CO_LEITO'].nunique()}"""
+
+print(f'✅ Agregaciones listas!')
+print(f'   📋 Tipos de cama : {len(_tipo)}')
+print(f'   🗺️  UFs            : {len(_uf)}')
+print(f'   🔬 UTI tipos      : {len(_uti_tipo)}')
+print(f'   🌍 Regiões        : {len(_reg)}')
+print(f'   📊 Especialidades : {len(_esp)} (top 50)')</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Salida esperada da Célula 8</div>
+        <div class="result-row ok">✅ Agregaciones listas!</div>
+        <div class="result-row info">📋 Tipos de cama: 3 | 🗺️ UFs: 27 | 🌍 Regiões: 5</div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--navy);">1</div><p>Ejecuta la <strong>Celda 9</strong> — ela define o roteador E a função <code>chat_leitos()</code></p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--navy);">2</div><p>Espera la prueba rápida al final de la celda — a IA deve responder con números reales</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 9 — Roteador + função de chat</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 9 — Roteador + função de chat
+# ============================================================
+
+# ── ROTEADOR: lê a pergunta → escolhe tabelas relevantes ──
+def _get_contexto(pergunta: str) -&gt; str:
+    p = pergunta.lower()
+    blocos = [_RESUMO, f"\nLEITOS POR TIPO:\n{_tipo.to_string()}"]
+
+    kw_uf = ['estado','uf','sp','rj','mg','rs','ba','pr','sc','go','df',
+             'ac','am','pa','ma','ce','pe','pi','rn','pb','al','se','ap',
+             'ro','rr','to','ms','mt','es','maior','menor','top','ranking','compare','comparar']
+    if any(x in p for x in kw_uf):
+        blocos.append(f"\nLEITOS POR UF:\n{_uf.to_string()}")
+
+    if any(x in p for x in ['uti','intensiv','crítico','critico','complementar']):
+        blocos.append(f"\nUTI POR TIPO:\n{_uti_tipo.to_string()}")
+        blocos.append(f"\nUTI POR UF:\n{_uti_uf.to_string()}")
+
+    if any(x in p for x in ['regiao','região','norte','nordeste','sudeste','sul','centro-oeste','centro']):
+        blocos.append(f"\nLEITOS POR REGIÃO:\n{_reg.to_string()}")
+
+    if any(x in p for x in ['especialidade','obstet','pediatr','cirurg','clínic','clinic',
+                              'psiqui','oncol','neonat','hospital dia']):
+        blocos.append(f"\nTOP 50 ESPECIALIDADES:\n{_esp.to_string()}")
+
+    if len(blocos) == 2:
+        blocos.append(f"\nLEITOS POR UF:\n{_uf.to_string()}")
+        blocos.append(f"\nLEITOS POR REGIÃO:\n{_reg.to_string()}")
+
+    return "\n".join(blocos)
+
+
+# ── FUNÇÃO DE CHAT: une roteador + histórico + API ────────
+_SYSTEM_PROMPT = """Você é um especialista em saúde pública brasileira com profundo conhecimento
+do CNES (Cadastro Nacional de Estabelecimentos de Saúde) e do SUS.
+
+INSTRUÇÕES:
+1. Responda APENAS com base nos dados fornecidos no contexto
+2. Cite números exatos — nunca estime sem avisar
+3. Ao comparar UFs ou regiões, mostre os valores lado a lado
+4. Se os dados não forem suficientes para responder, diga claramente
+5. Responda em português, de forma direta e objetiva
+6. Responda a pergunta primeiro, explique depois
+7. Quando relevante, contextualize no sistema de saúde brasileiro
+"""
+
+def chat_leitos(pergunta: str, historico: list = []) -&gt; str:
+    contexto = _get_contexto(pergunta)
+    msgs = [{'role': 'system', 'content': _SYSTEM_PROMPT}]
+    for p_ant, r_ant in historico[-3:]:
+        msgs.append({'role': 'user',      'content': p_ant})
+        msgs.append({'role': 'assistant', 'content': r_ant})
+    msgs.append({'role': 'user', 'content': f"DADOS CNES:\n{contexto}\n\nPERGUNTA: {pergunta}"})
+    resp = client_ai.chat.completions.create(
+        model='gpt-4o-mini', messages=msgs, temperature=0.1, max_tokens=700
+    )
+    return resp.choices[0].message.content
+
+
+# Teste rápido
+print('🧪 TESTE DO CHAT')
+print('=' * 55)
+pergunta_teste = 'Qual o total de leitos UTI SUS no Brasil e quais os estados com mais UTI?'
+print(f'Pergunta: {pergunta_teste}\n')
+print(chat_leitos(pergunta_teste))</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Salida esperada do teste (Célula 9)</div>
+        <div class="result-row ok">Brasil tiene X.XXX camas UTI, dos quais X.XXX (XX%) são SUS...</div>
+        <div class="result-row warn">⚠️ Si aparece error: verifica que las Celdas 7 y 8 fueron ejecutadas</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Célula 8 ejecutó y mostró "✅ Agregaciones listas!"</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Célula 9 ejecutó sin error</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La prueba rápida retornó una respuesta con números reales del CNES</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 7 ── -->
+    <div class="step-section" id="step7">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#16a34a,#15803d);">7</div>
+        <div class="step-header-text">
+          <h3>Interfaz Visual (Gradio) <span class="step-tag" style="background:var(--green-l);color:var(--green);">💬 Produto Final</span></h3>
+          <p>Transformar el motor de chat en una interfaz navegable</p>
+        </div>
+      </div>
+      <div class="section-overview green">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Vamos a transformar la función <code>chat_leitos()</code> en una interfaz visual interactiva usando Gradio — con campo de texto, historial de conversación y botones de preguntas rápidas. Todo en una sola celda.</p>
+        <div class="ov-goals"><span class="ov-goal">🖥️ Interfaz con Gradio</span><span class="ov-goal">🔘 Preguntas rápidas</span><span class="ov-goal">💬 Historial de conversación</span></div>
+      </div>
+      <div class="alert danger">
+        <div class="alert-icon">🔴</div>
+        <p><strong>Erro comum — <code>name 'chat_leitos' is not defined</code></strong><br>Colab perdió la memoria al reconectar. <strong>Solução:</strong> haz clic en <strong>Entorno de ejecución → Ejecutar todo</strong> (<code>Ctrl+F9</code>).</p>
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">⚠️</div>
+        <p><strong>Regra de ouro:</strong> esta celda necesita ejecutarse DESPUÉS de las Celdas 7, 8 y 9.</p>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">1</div><p>Ejecuta la <strong>Celda 10</strong> — aguarde a interface abrir abaixo da célula</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">2</div><p>Haz clic en una de las preguntas rápidas ou escreva sua própria pergunta</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--green);">3</div><p>Usa el botón <strong>🗑️ Limpiar conversación</strong> para reiniciar o histórico</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 10 — Interfaz Gradio (célula completa e autônoma)</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 10 — Interfaz Gradio (célula completa e autônoma)
+# ============================================================
+import gradio as gr
+
+hist_gradio = []
+
+def chat_gradio(pergunta: str, historico_visual: list):
+    if not pergunta.strip():
+        return historico_visual, ''
+    try:
+        resposta = chat_leitos(pergunta, hist_gradio)
+        hist_gradio.append((pergunta, resposta))
+    except Exception as e:
+        resposta = f'❌ Erro: {str(e)[:300]}\n⚠️ Execute: Ambiente de execução → Executar tudo (Ctrl+F9)'
+    return historico_visual + [(pergunta, resposta)], ''
+
+def limpar_chat():
+    global hist_gradio
+    hist_gradio = []
+    return [], ''
+
+def btn_pergunta(texto):
+    return lambda h: chat_gradio(texto, h)
+
+with gr.Blocks(title='Chat Leitos SUS — IDASH 2026', theme=gr.themes.Soft()) as demo:
+
+    gr.HTML("""
+    &lt;div style='text-align:center;padding:20px;
+                background:linear-gradient(135deg,#0f2942,#27ae60);
+                border-radius:12px;margin-bottom:16px'&gt;
+        &lt;h2 style='color:white;margin:0'&gt;🏥 Assistente de Leitos Hospitalares&lt;/h2&gt;
+        &lt;p style='color:#d5f5e3;margin:6px 0 0;font-size:13px'&gt;
+            CNES Jun/2025 · GPT-4o-mini · IDASH 2026
+        &lt;/p&gt;
+    &lt;/div&gt;""")
+
+    chatbot = gr.Chatbot(height=420, show_label=False, bubble_full_width=False)
+
+    with gr.Row():
+        txt = gr.Textbox(
+            placeholder='Pergunte sobre camas hospitalarias no Brasil...',
+            show_label=False, scale=5, container=False
+        )
+        btn_enviar = gr.Button('Enviar', variant='primary', scale=1)
+
+    btn_limpar = gr.Button('🗑️ Limpar conversa', size='sm')
+    gr.Markdown('**💡 Preguntas rápidas:**')
+
+    with gr.Row():
+        b1 = gr.Button('🏥 UTI total no Brasil',  size='sm')
+        b2 = gr.Button('🏆 Top 5 estados SUS',    size='sm')
+        b3 = gr.Button('👶 Leitos obstétricos',   size='sm')
+    with gr.Row():
+        b4 = gr.Button('🌿 Região Norte',         size='sm')
+        b5 = gr.Button('🔬 Tipos de UTI',         size='sm')
+        b6 = gr.Button('📋 Resumo executivo',     size='sm')
+
+    gr.HTML("""&lt;details style='margin-top:12px'&gt;
+    &lt;summary style='cursor:pointer;color:#7f8c8d;font-size:12px'&gt;ℹ️ Como funciona (RAG)&lt;/summary&gt;
+    &lt;p style='font-size:12px;color:#95a5a6;margin:8px 0 0'&gt;
+    Cada pergunta ativa um roteador que seleciona apenas as tabelas relevantes dos dados
+    pré-calculados (UF, tipo, UTI, região, especialidade). Esse contexto é enviado ao
+    GPT-4o-mini junto com a pergunta — nenhum dado bruto sai do Colab.
+    &lt;/p&gt;&lt;/details&gt;""")
+
+    btn_enviar.click(chat_gradio, [txt, chatbot], [chatbot, txt])
+    txt.submit(chat_gradio,       [txt, chatbot], [chatbot, txt])
+    btn_limpar.click(limpar_chat, [], [chatbot, txt])
+
+    b1.click(btn_pergunta('Quantos leitos UTI existem no Brasil? Quantos são SUS?'),              [chatbot], [chatbot, txt])
+    b2.click(btn_pergunta('Quais os 5 estados com maior % de leitos SUS? E os 5 menores?'),       [chatbot], [chatbot, txt])
+    b3.click(btn_pergunta('Compare leitos obstétricos entre SP, MG, RJ e BA.'),                   [chatbot], [chatbot, txt])
+    b4.click(btn_pergunta('Qual a situação dos leitos na região Norte? Compare com o Sudeste.'),  [chatbot], [chatbot, txt])
+    b5.click(btn_pergunta('Quais os tipos de UTI existentes e quantos leitos tem cada um?'),      [chatbot], [chatbot, txt])
+    b6.click(btn_pergunta('Faça um resumo executivo dos camas hospitalarias no Brasil, destacando desigualdades regionais.'), [chatbot], [chatbot, txt])
+
+demo.launch(share=False, debug=False, quiet=True)
+print('\n✅ Chat rodando! Acesse o link acima.')</pre>
+      </div>
+      <div class="result-preview">
+        <div class="result-preview-header"><span>📟</span> Lo que sucede al ejecutar</div>
+        <div class="result-row info">Running on local URL: http://127.0.0.1:7860</div>
+        <div class="result-row ok">✅ Chat rodando! Acesse o link acima.</div>
+        <div class="result-row warn">⚡ A interface de chat abre diretamente no Colab</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La interfaz del chat se abrió correctamente</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Los botones de preguntas rápidas funcionan</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>La IA respondió con números reales del CNES</span></div>
+      </div>
+    </div>
+        <div class="section-divider"></div>
+    <!-- ── BLOCO 8 ── -->
+    <div class="step-section" id="step8">
+      <div class="step-header">
+        <div class="step-badge" style="background:linear-gradient(135deg,#d97706,#92400e);">8</div>
+        <div class="step-header-text">
+          <h3>Exportar Resultados <span class="step-tag" style="background:var(--amber-l);color:var(--amber);">📤 NotebookLM</span></h3>
+          <p>Generar un archivo que cualquier persona puede usar sin código</p>
+        </div>
+      </div>
+      <div class="section-overview amber">
+        <h4>🗺️ ¿Qué vamos a hacer en esta etapa?</h4>
+        <p>Exportamos todo el análisis como un archivo <code>.txt</code> estructurado para <strong>NotebookLM de Google</strong>. Cualquier persona puede cargar ese archivo y hacer preguntas en lenguaje natural — sin Python, sin API Key.</p>
+        <div class="ov-goals"><span class="ov-goal">📝 Generar resumen estructurado</span><span class="ov-goal">💾 Exportar como .txt</span><span class="ov-goal">📚 Cargar en NotebookLM</span></div>
+      </div>
+      <div class="explain amber">
+        <div class="icon">📚</div>
+        <div class="explain-text"><strong>¿Para qué sirve el NotebookLM?</strong><p>Gestores y equipos que no usan Python pueden hacer preguntas sobre los datos cargando el archivo .txt. Es como una versión del chatbot que funciona sin API Key, accesible para cualquier persona con cuenta de Google.</p></div>
+      </div>
+      <div class="instructions">
+        <div class="instruction"><div class="inst-num" style="background:var(--amber);">1</div><p>Ejecuta la <strong>Celda 11</strong> — o arquivo será gerado automaticamente</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--amber);">2</div><p>Haz clic en <strong>Download</strong> quando aparecer o prompt</p></div>
+        <div class="instruction"><div class="inst-num" style="background:var(--amber);">3</div><p>Accede a <code>notebooklm.google.com</code> → <strong>Add source → Upload</strong> → selecione o arquivo</p></div>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">CELDA 11 — Exportar análise para NotebookLM</span></div>
+          <button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+        </div>
+        <pre class="code-body"># ============================================================
+# CÉLULA 11 — Exportar análise para NotebookLM
+# ============================================================
+from google.colab import files
+
+linhas = [
+    '# ANÁLISE CNES — Leitos Hospitalares Brasil',
+    '## Competência: Junho 2025 | Fonte: DATASUS/CNES | IDASH 2026',
+    '',
+    '## 1. RESUMO GERAL',
+    f'- Registros: {len(df):,}',
+    f'- Camas existentes: {_lt_e:,}',
+    f'- Leitos SUS: {_lt_s:,} ({_lt_s/_lt_e*100:.1f}%)',
+    f'- Leitos não-SUS: {_lt_n:,}',
+    f'- UTI existentes: {_uti_e:,}',
+    f'- UTI SUS: {_uti_s:,} ({_uti_s/_uti_e*100:.1f}%)',
+    '',
+    '## 2. LEITOS POR TIPO',
+]
+for idx, row in _tipo.iterrows():
+    linhas.append(f'- {idx}: {int(row["exist"]):,} leitos ({row["taxa_sus"]}% SUS)')
+
+linhas += ['', '## 3. LEITOS POR UF']
+for uf, row in _uf.iterrows():
+    uti_r    = _uti_uf[_uti_uf.index == uf]
+    uti_info = f' | UTI: {int(uti_r["exist"].values[0]):,} ({uti_r["taxa_sus"].values[0]}% SUS)' if len(uti_r) &gt; 0 else ''
+    linhas.append(f'- {uf}: {int(row["exist"]):,} leitos ({row["taxa_sus"]}% SUS){uti_info}')
+
+linhas += ['', '## 4. LEITOS POR REGIÃO']
+for reg, row in _reg.iterrows():
+    linhas.append(f'- {reg}: {int(row["exist"]):,} leitos ({row["taxa_sus"]}% SUS)')
+
+linhas += [
+    '', '## 5. PRINCIPAIS ACHADOS',
+    f'- {_lt_e:,} leitos no Brasil — {_lt_s/_lt_e*100:.1f}% SUS',
+    '- Tipo CLÍNICO é o maior; COMPLEMENTAR inclui todas as UTIs',
+    '- Sudeste concentra maior volume; Norte/Nordeste têm maior % SUS',
+    '- DF tem menor taxa SUS; AC e RR as maiores',
+    f'- {_uti_e:,} leitos UTI — {_uti_s/_uti_e*100:.1f}% SUS',
+]
+
+texto = '\n'.join(linhas)
+with open('cnes_leitos_notebooklm.txt', 'w', encoding='utf-8') as f:
+    f.write(texto)
+
+print(f'✅ Arquivo gerado: cnes_leitos_notebooklm.txt ({len(texto):,} chars)')
+print()
+print('📌 Como usar no NotebookLM:')
+print('   1. notebooklm.google.com')
+print('   2. Crie um novo notebook')
+print('   3. Add source → Upload → cnes_leitos_notebooklm.txt')
+print('   4. Faça perguntas em português!')
+
+files.download('cnes_leitos_notebooklm.txt')</pre>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🎉</div>
+        <div><div class="tip-title">¡Felicidades — construiste un chatbot sobre datos de salud!</div><div class="tip-text">En ~90 minutos fuiste de un CSV crudo del DATASUS a una interfaz de chat con IA. El próximo paso es reemplazar el CSV por otro dataset y adaptar los bloques.</div></div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>El archivo .txt fue generado y descargado</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Cargado en NotebookLM con éxito</span></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>Logré hacer una pregunta en NotebookLM</span></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">
+    <span>IDASH 2026 · Cómo Conversar con tus Datos · CNES Camas Jun/2025</span>
+    <span>GPT-4o-mini · RAG · Gradio · NotebookLM</span>
+  </div>
+</div>
+<script>
+function copyCode(btn) {
+  const wrapper = btn.closest('.code-block-wrapper') || btn.closest('.sql-block-wrapper');
+  if (!wrapper) return;
+  const pre = wrapper.querySelector('pre');
+  if (!pre) return;
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiado!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar`;
+    }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiado!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar`;
+    }, 2000);
+  });
+}
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  el.querySelector('.check-box').textContent = el.classList.contains('checked') ? '✓' : '';
+  updateProgress();
+}
+function updateProgress() {
+  const total = document.querySelectorAll('.check-item').length;
+  const done  = document.querySelectorAll('.check-item.checked').length;
+  const bar   = document.getElementById('progressBar');
+  const txt   = document.getElementById('progressText');
+  if (bar) bar.style.width = (total > 0 ? done/total*100 : 0) + '%';
+  if (txt) txt.textContent = `${done} / ${total} ítems`;
+}
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+const sections = document.querySelectorAll('.step-section');
+const navLinks  = document.querySelectorAll('.nav-item');
+const observer  = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + id));
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
