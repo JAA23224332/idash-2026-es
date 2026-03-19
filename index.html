@@ -151,6 +151,12 @@ pre.sql-body{background:#0d1f0d;padding:20px;overflow-x:auto;font-family:var(--f
 .step-section:nth-child(5){animation-delay:.25s}.step-section:nth-child(6){animation-delay:.30s}
 .step-section:nth-child(7){animation-delay:.35s}.step-section:nth-child(8){animation-delay:.40s}
 @media(max-width:900px){.sidebar{display:none}.main{margin-left:0}.hero,.content{padding:28px 20px}.prereq-banner{margin:0 20px}}
+.download-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.download-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-family:var(--font-body);font-size:13px;font-weight:700;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.download-btn svg{width:18px;height:18px;flex-shrink:0}
+.download-btn.csv{background:#16a34a;color:#fff}.download-btn.csv:hover{background:#15803d}
+.download-btn.notebook{background:#7c3aed;color:#fff}.download-btn.notebook:hover{background:#6d28d9}
+.download-btn.colab{background:#f97316;color:#fff}.download-btn.colab:hover{background:#ea580c}
 </style>
 </head>
 <body>
@@ -189,6 +195,20 @@ pre.sql-body{background:#0d1f0d;padding:20px;overflow-x:auto;font-family:var(--f
       <div class="stat-pill"><strong>~90</strong><span>minutos</span></div>
       <div class="stat-pill"><strong>GPT-4o-mini</strong><span>modelo usado</span></div>
       <div class="stat-pill"><strong>Gratuito</strong><span>Google Colab</span></div>
+    </div>
+    <div class="download-bar">
+      <a class="download-btn csv" href="https://github.com/JAA23224332/idash-2026-es/raw/master/CnesLeitosBR.csv" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar Base CSV
+      </a>
+      <a class="download-btn notebook" href="https://github.com/JAA23224332/idash-2026-es/raw/master/IDASH_2026_CNES_Leitos.ipynb" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar Notebook (.ipynb)
+      </a>
+      <a class="download-btn colab" href="https://colab.research.google.com/github/JAA23224332/idash-2026-es/blob/master/IDASH_2026_CNES_Leitos.ipynb" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Abrir en Google Colab
+      </a>
     </div>
   </div>
   <div class="prereq-banner">
